@@ -4,8 +4,8 @@ Control your MISP instances, create new users, lookup users on all instances, bu
 
 example usage: 
 
-add a user on a specific instance
-./add_user.sh -c <email_address>
+# add a user on a specific instance
+`./add_user.sh -c <email_address>`
 
 search a user across all instances
 ./bulk_modify_users.sh -s <email_address>
