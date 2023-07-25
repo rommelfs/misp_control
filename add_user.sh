@@ -1,4 +1,4 @@
-#!/usr/local/bin/bash 
+#!/opt/homebrew/bin/bash
 # add user script
 # config file needed (config.csv)
 # fields:
