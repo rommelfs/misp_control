@@ -10,10 +10,16 @@ add a user on a specific instance
 ```
 
 search a user across all instances
+```
 ./bulk_modify_users.sh -s <email_address>
+```
 
 disable email alerts to user on all instances
+```
 ./bulk_modify_users.sh -e <email_address> 
+```
 
 disable user on all instances
+```
 ./bulk_modify_users.sh -x <email_address>
+```
