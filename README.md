@@ -34,13 +34,6 @@ disable user on all instances
 /^Subject: (Undeliverable|Δεν παραδόθηκε|Unzustellbar|Ekki hægt að afhenda|Non remis\ ):\ \[YOUR (FIRST|SECOND|THIRD)\ MISP\].*/      REDIRECT misp-bounce@YOUR-DOMAIN.TLD
 ```
 
-For keeping a copy in RT:
-`/etc/aliases`
-
-```
-rtbounce:               "|/opt/rt5/bin/rt-mailgate --queue 'Bounces' --action correspond --url http://rt/"
-```
-
 Your crontab:
 ```
 */5 * * * *     cd /home/user/misp-bounce ; ./bouncer.sh
