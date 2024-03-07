@@ -24,7 +24,23 @@ disable user on all instances
 ./bulk_modify_users.sh -x <email_address>
 ```
 
+upgrade all MISP instances configured in config file
+```
+./upgrade_misp.sh
+```
 
+## Example of using upgrade_misp.sh
+
+```
+                     Host	   Installed	         Tag	     Release	         Action
+  ---------------------------------------------------------------------------------------------------------------------------------
+            misp.tro*llo.com	     2.4.186	     2.4.186	     2.4.186  => no update required
+           misp.a-*z.org	     2.4.158	     2.4.186	     2.4.186  => The installed version is outdated. Update now? (y/n/c): n (not updating)
+             misp.*xyz*.lu	     2.4.158	     2.4.186	     2.4.186  => The installed version is outdated. Update now? (y/n/c): y Updating server misp.****.lu
+  => Something went wrong. Do you want to see the output? (y/n): n
+             misp.*abcd*.eu	     2.4.184	     2.4.186	     2.4.186  => The installed version is outdated. Update now? (y/n/c): y Updating server misp.*abcd*.eu
+  => Updated successfully or no update available
+```
 
 ## Example of using misp_control for bounce management of MISP servers
 
