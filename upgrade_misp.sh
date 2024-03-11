@@ -56,22 +56,26 @@ do
   HOST=$(echo $line | cut -d "," -f 1)
   KEY=$(echo $line | cut -d "," -f 2)
   RESP=$(/usr/bin/curl -s  -H "Authorization: ${KEY}"  -H "Accept: application/json"  -H "Content-type: application/json"  https://${HOST}/servers/getVersion)
-  VERSION_RUNNING=$( echo $RESP |jq -r ".[]"|head -n1 )
-  VERSION_RUNNING="${VERSION_RUNNING%%[[:cntrl:]]}"
-  if [[ ! $VERSION_RUNNING ]]
+  if [[ $(echo $RESP|egrep -e "Authentication failed") ]]
   then
+    printf "%25s\t%85s\n" ${HOST} " => [!] Authentication key is incorrect!"
+  else 
+    VERSION_RUNNING=$( echo $RESP |jq -r ".[]"|head -n1 )
+    VERSION_RUNNING="${VERSION_RUNNING%%[[:cntrl:]]}"
+    if [[ ! $VERSION_RUNNING ]]
+    then
       VERSION_RUNNING="n/a"
-  fi
+    fi
 
-  printf "%25s\t%12s\t%12s\t%12s" ${HOST} ${VERSION_RUNNING} ${VERSION_TAG} ${VERSION_RELEASE}
-  if [[ ${VERSION_RUNNING} == ${VERSION_RELEASE} || ${VERSION_RUNNING} == ${VERSION_TAG} ]]
-  then
-    echo -e "  => no update required"
-  else
-    echo -en "  => The installed version is outdated. Update now? (y/n/c): "
-    read -r -s -n 1 input
-    echo -n $input
-    case "$input" in
+    printf "%25s\t%12s\t%12s\t%12s" ${HOST} ${VERSION_RUNNING} ${VERSION_TAG} ${VERSION_RELEASE}
+    if [[ ${VERSION_RUNNING} == ${VERSION_RELEASE} || ${VERSION_RUNNING} == ${VERSION_TAG} ]]
+    then
+      echo -e "  => no update required"
+    else
+      echo -en "  => The installed version is outdated. Update now? (y/n/c): "
+      read -r -s -n 1 input
+      echo -n $input
+      case "$input" in
 		"y")
 			echo " Updating server ${HOST}"
             update_server $HOST $KEY
@@ -84,7 +88,8 @@ do
 			echo -e " \n  Cancelling the process"
 			exit 1
 			;;
-	esac
+	  esac
+    fi
   fi
 done
 
