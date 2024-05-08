@@ -28,7 +28,6 @@ function update_server {
   fi
 }
 
-
 # get release version
 VERSION_RELEASE=$( curl -s -I https://github.com/MISP/MISP/releases/latest |grep location | rev | cut -d "/" -f 1|rev|cut -d "v" -f 2 )
 VERSION_RELEASE="${VERSION_RELEASE%%[[:cntrl:]]}"
@@ -68,7 +67,8 @@ do
     fi
 
     printf "%25s\t%12s\t%12s\t%12s" ${HOST} ${VERSION_RUNNING} ${VERSION_TAG} ${VERSION_RELEASE}
-    if [[ ${VERSION_RUNNING} == ${VERSION_RELEASE} || ${VERSION_RUNNING} == ${VERSION_TAG} ]]
+    if [[ ${VERSION_RUNNING} == ${VERSION_TAG} ]]
+        # || ${VERSION_RUNNING} == ${VERSION_RELEASE} ]]
     then
       echo -e "  => no update required"
     else
