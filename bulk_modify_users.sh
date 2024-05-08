@@ -33,7 +33,7 @@ function search (){
     server=$(echo $line | cut -d "," -f 1)
     echo -n "Working on server $server... "
     apikey=$(echo $line | cut -d "," -f 2)
-    result=$(curl -s -H "Authorization: ${apikey}" -H "Accept: application/json" -H "Content-Type: application/json" -X GET https://${server}/users/admin_index/value:${user}.json)
+    result=$(curl -s -H "Authorization: ${apikey}" -H "Accept: application/json" -H "Content-Type: application/json" -X GET https://${server}/users/admin_index/value:${user}.json | jq )
     if [[ "$result" != '[]' ]]
     then
       echo "found $user"
@@ -65,7 +65,7 @@ function modify_user (){
     server=$(echo $line | cut -d "," -f 1)
     echo -n "Working on server $server... "
     apikey=$(echo $line | cut -d "," -f 2)
-    result=$(curl -s -H "Authorization: ${apikey}" -H "Accept: application/json" -H "Content-Type: application/json" -X GET https://${server}/users/admin_index/value:${user}.json)
+    result=$(curl -s -H "Authorization: ${apikey}" -H "Accept: application/json" -H "Content-Type: application/json" -X GET https://${server}/users/admin_index/value:${user}.json | jq)
     user_id=$(echo $result | jq -r ".[].User.id")
     if [[ ! "$user_id" ]] 
     then 
