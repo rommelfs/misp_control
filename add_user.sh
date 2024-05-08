@@ -25,12 +25,17 @@ function parse (){
   else
     { read id; read email; read last; read current; read alert; read disabled; } <<< `echo $@ | jq -r ".User.id, .User.email, .User.last_login, .User.current_login, .User.autoalert, .User.disabled"`
   fi
-  echo -e " User ID:\t${id}"
-  echo -e " Email:\t\t${email}"
-  echo -e " Prev. Login:\t$(date -r ${last})"
-  echo -e " Last Login:\t$(date -r ${current})"
-  echo -e " Autoalert:\t${alert}"
-  echo -e " Disabled:\t${disabled}"
+  if [[ ${id} && ${email} && ${last} && ${current} && ${alert} && ${disabled} ]]
+  then
+    echo -e " User ID:\t${id}"
+    echo -e " Email:\t\t${email}"
+    echo -e " Prev. Login:\t$(date -r ${last})"
+    echo -e " Last Login:\t$(date -r ${current})"
+    echo -e " Autoalert:\t${alert}"
+    echo -e " Disabled:\t${disabled}"
+  else
+    echo "No user data found."
+  fi
 }
 
 function select_org (){
@@ -74,7 +79,7 @@ function find_user (){
   server=${config[$selected_server,0]}
   apikey=${config[$selected_server,1]}
   echo -n "Working on server $server... "
-  result=$(curl -s -H "Authorization: ${apikey}" -H "Accept: application/json" -H "Content-Type: application/json" -X GET https://${server}/users/admin_index/value:${user}.json)
+  result=$(curl -s -H "Authorization: ${apikey}" -H "Accept: application/json" -H "Content-Type: application/json" -X GET https://${server}/users/admin_index/value:${user}.json | jq)
   if [[ "$result" != '[]' ]]
   then
     #echo "found $user"
