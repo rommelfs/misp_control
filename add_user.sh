@@ -1,11 +1,11 @@
-#!/opt/homebrew/bin/bash
+#!/usr/bin/env bash
 # add user script
 # config file needed (config.csv)
 # fields:
 # server_name,API_key
 # 2021-06 Sascha Rommelfangen, CIRCL, SMILE
 
-
+# set -x 
 command="$1"
 user="$2"
 declare -A config
@@ -14,6 +14,15 @@ declare org_id
 declare server
 declare apikey
 declare id
+
+
+function datelnxmac() {
+  if [[ "$(uname)" == "Darwin" ]]; then
+    date -r $1
+  else
+    date -d @`echo -n $1`
+  fi
+}
 
 function parse (){
   encapsulated="$1"
@@ -29,8 +38,8 @@ function parse (){
   then
     echo -e " User ID:\t${id}"
     echo -e " Email:\t\t${email}"
-    echo -e " Prev. Login:\t$(date -r ${last})"
-    echo -e " Last Login:\t$(date -r ${current})"
+    echo -e " Prev. Login:\t$(datelnxmac ${last})"
+    echo -e " Last Login:\t$(datelnxmac ${current})"
     echo -e " Autoalert:\t${alert}"
     echo -e " Disabled:\t${disabled}"
   else
@@ -167,6 +176,26 @@ function select_server (){
   echo "You selected: ${config[$selected_server,0]}"
 }
 
+function search_user(){
+  user="$1"
+  select_server
+  if find_user $user
+  then
+    echo "User already exists. Exiting."
+    exit 0
+  else
+    echo "User not found."
+    exit 1
+  fi
+}
+
+function datelxnmac() {
+  vdate ="$1"
+  date -d @$vdate
+# if mac
+#   date -r vdate 
+}
+
 
 function create_user (){
   user="$1"
@@ -212,7 +241,7 @@ function add_user (){
     echo
     echo "Paste the key/certificate here (Send with Ctrl-D, cancel with Ctrl-C):"
     key=$(cat)
-    key=$(echo "$key"|gsed -z -e 's/\n/\\n/g')
+    key=$(echo "$key"|sed -z -e 's/\n/\\n/g')
     if [ $enc_type -eq "1" ] 
     then 
       gpgkey="${key}"
@@ -281,7 +310,7 @@ function show_help {
 
 case "$command" in
   -s) 
-      search $user
+      search_user $user
       exit 0
   ;;
   -c) 
