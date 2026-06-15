@@ -28,7 +28,7 @@ function update_server {
       echo "  => Updated MISP successfully or no update available"
   fi
   echo "Updating JSON"
-  RESULT=$(curl -s -d '[]' -H "Authorization: $KEY" -H "Accept: application/json" -H "Content-type: application/json" -X POST https://$HOST/servers/updateJSON/ )
+  RESULT=$(curl -s -d '[]' -H "Authorization: $KEY" -H "Accept: application/json" -H "Content-type: application/json" -X POST https://$HOST/servers/updateJSON/async:1 )
   if [[ $(echo $RESULT|jq|egrep -e "status\"\:|Update failed"|grep -v 0) ]]
   then
       echo -en "  => Something went wrong updating JSON. See the output? (y/n): "
@@ -50,7 +50,7 @@ function update_server {
 VERSION_RELEASES=$( curl -s https://github.com/MISP/MISP/releases |ggrep -oP '/MISP/MISP/releases/expanded_assets/\Kv[0-9]+\.[0-9]+\.[0-9]+' | rev | cut -d "/" -f 1|rev|cut -d "v" -f 2 )
 VERSION_RELEASE=""
 # get tag version
-VERSION_TAGS=$( curl -s https://github.com/MISP/MISP/tags/ |grep /MISP/MISP/releases/tag/|head -n 18|ggrep -oP '/MISP/MISP/releases/tag/\Kv[0-9]+\.[0-9]+\.[0-9]+' | rev|cut -d "<" -f 3|cut -d ">" -f 1|rev|cut -d "v" -f 2 )
+VERSION_TAGS=$( curl -s https://github.com/MISP/MISP/tags/ |grep /MISP/MISP/releases/tag/|head -n 55|ggrep -oP '/MISP/MISP/releases/tag/\Kv[0-9]+\.[0-9]+\.[0-9]+' | rev|cut -d "<" -f 3|cut -d ">" -f 1|rev|cut -d "v" -f 2 )
 VERSION_TAG=""
 CONFIG="config.csv"
 
